@@ -4,6 +4,35 @@
  * Uses microphone for audio input with turn-based transcript display
  */
 
+import { setLight, setDark, setSystem, getTheme, onThemeChange } from './node_modules/@deepgram/styles/dist/utils.js';
+
+// ============================================================================
+// THEME SWITCHING
+// ============================================================================
+
+function initThemeToggle() {
+  const buttons = {
+    light: document.getElementById('theme-light'),
+    dark: document.getElementById('theme-dark'),
+    system: document.getElementById('theme-system'),
+  };
+
+  function updateActiveButton(theme) {
+    Object.entries(buttons).forEach(([key, btn]) => {
+      btn.className = key === theme
+        ? 'dg-btn dg-btn--secondary dg-btn--sm'
+        : 'dg-btn dg-btn--ghost dg-btn--sm';
+    });
+  }
+
+  buttons.light.addEventListener('click', setLight);
+  buttons.dark.addEventListener('click', setDark);
+  buttons.system.addEventListener('click', setSystem);
+
+  onThemeChange(updateActiveButton);
+  updateActiveButton(getTheme());
+}
+
 // ============================================================================
 // SESSION MANAGEMENT
 // ============================================================================
@@ -85,7 +114,10 @@ const elements = {
   requestId: document.getElementById('request-id'),
   messageCount: document.getElementById('message-count'),
   turnCount: document.getElementById('turn-count'),
-  currentTurnEvent: document.getElementById('current-turn-event')
+  currentTurnEvent: document.getElementById('current-turn-event'),
+
+  // Error alert
+  errorAlert: document.getElementById('error-alert')
 };
 
 // ============================================================================
@@ -93,6 +125,7 @@ const elements = {
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  initThemeToggle();
   initializeEventListeners();
   loadMetadata();
 });
@@ -597,7 +630,7 @@ function createTurnContainer(turnIndex) {
   header.className = 'transcript-item__header';
 
   const timestamp = document.createElement('div');
-  timestamp.className = 'transcript-item__timestamp';
+  timestamp.className = 'dg-prose dg-prose--small dg-text-muted';
   timestamp.textContent = new Date().toLocaleTimeString();
 
   const badge = document.createElement('span');
@@ -611,7 +644,7 @@ function createTurnContainer(turnIndex) {
 
   // Transcript text
   const textDiv = document.createElement('div');
-  textDiv.className = 'transcript-item__text';
+  textDiv.className = 'dg-prose';
   textDiv.id = `turn-text-${turnIndex}`;
   item.appendChild(textDiv);
 
@@ -661,7 +694,7 @@ function updateTurnTranscript(turnIndex, transcript, eventClass) {
  */
 function addTurnMarker(turnIndex) {
   const marker = document.createElement('div');
-  marker.className = 'transcript-turn-marker';
+  marker.className = 'transcript-turn-marker dg-prose dg-prose--small dg-text-muted';
   marker.textContent = `Turn ${turnIndex + 1} complete`;
   elements.transcriptContainer.appendChild(marker);
 }
@@ -672,8 +705,8 @@ function addTurnMarker(turnIndex) {
 
 function updateConnectionStatus(connected, text) {
   elements.connectionStatus.className = connected
-    ? 'status-badge status-badge--connected'
-    : 'status-badge status-badge--disconnected';
+    ? 'status-badge dg-text-primary'
+    : 'status-badge dg-text-muted';
 
   while (elements.connectionStatus.firstChild) {
     elements.connectionStatus.removeChild(elements.connectionStatus.firstChild);
@@ -690,7 +723,7 @@ function updateConnectionStatus(connected, text) {
 function updateMicrophoneStatus(active) {
   if (active === true) {
     elements.micStatus.textContent = 'Active';
-    elements.micStatus.style.color = 'var(--dg-primary, #13ef95)';
+    elements.micStatus.style.color = 'var(--color-dg-primary, #13ef95)';
   } else if (active === false) {
     elements.micStatus.textContent = 'Inactive';
     elements.micStatus.style.color = '';
@@ -734,7 +767,10 @@ function updateTurnEventBadge(event) {
 }
 
 function showError(message) {
-  alert(message);
+  const container = elements.errorAlert;
+  container.querySelector('.dg-alert__description p').textContent = message;
+  container.classList.remove('hidden');
+  setTimeout(() => container.classList.add('hidden'), 10000);
 }
 
 // ============================================================================
