@@ -227,7 +227,6 @@ async function connect() {
       model: 'flux-general-en',
       encoding: 'linear16',
       sample_rate: '16000',
-      channels: '1',
       eot_threshold: state.config.eotThreshold.toString(),
       eot_timeout_ms: state.config.eotTimeoutMs.toString()
     });
@@ -249,7 +248,6 @@ async function connect() {
       model: 'flux-general-en',
       encoding: 'linear16',
       sample_rate: 16000,
-      channels: 1,
       eot_threshold: state.config.eotThreshold,
       eager_eot_threshold: state.config.eagerEotThreshold,
       eot_timeout_ms: state.config.eotTimeoutMs,
