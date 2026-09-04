@@ -5,6 +5,7 @@
  */
 
 import { setLight, setDark, setSystem, getTheme, onThemeChange } from './node_modules/@deepgram/styles/dist/utils.js';
+import { createTurnContainer } from './turn-display.js';
 
 // ============================================================================
 // THEME SWITCHING
@@ -326,7 +327,7 @@ function handleTurnInfo(data) {
         event: 'StartOfTurn',
         transcript: transcript || ''
       };
-      createTurnContainer(turn_index);
+      createTurnContainer(elements, turn_index);
       updateTurnTranscript(turn_index, state.currentTurn.transcript, 'start-of-turn');
       updateTurnEventBadge('StartOfTurn');
       break;
@@ -608,51 +609,6 @@ async function startMicrophone() {
  * Create a container div for a new turn. Each turn gets its own container
  * so that Updates replace text in-place rather than appending new items.
  */
-function createTurnContainer(turnIndex) {
-  // Remove empty state if present
-  if (elements.emptyState && !elements.emptyState.classList.contains('hidden')) {
-    elements.emptyState.classList.add('hidden');
-  }
-
-  const container = document.createElement('div');
-  container.className = 'transcript-turn';
-  container.id = `turn-${turnIndex}`;
-
-  // Create the transcript item inside the turn container
-  const item = document.createElement('div');
-  item.className = 'transcript-item transcript-item--start-of-turn';
-  item.id = `turn-item-${turnIndex}`;
-
-  // Header with timestamp and event badge
-  const header = document.createElement('div');
-  header.className = 'transcript-item__header';
-
-  const timestamp = document.createElement('div');
-  timestamp.className = 'dg-prose dg-prose--small dg-text-muted';
-  timestamp.textContent = new Date().toLocaleTimeString();
-
-  const badge = document.createElement('span');
-  badge.className = 'turn-event-badge turn-event-badge--start-of-turn';
-  badge.id = `turn-badge-${turnIndex}`;
-  badge.textContent = 'Start';
-
-  header.appendChild(timestamp);
-  header.appendChild(badge);
-  item.appendChild(header);
-
-  // Transcript text
-  const textDiv = document.createElement('div');
-  textDiv.className = 'dg-prose';
-  textDiv.id = `turn-text-${turnIndex}`;
-  item.appendChild(textDiv);
-
-  container.appendChild(item);
-  elements.transcriptContainer.appendChild(container);
-
-  // Auto-scroll
-  elements.transcriptContainer.scrollTop = elements.transcriptContainer.scrollHeight;
-}
-
 /**
  * Update the transcript text and styling for a turn.
  * This replaces text in-place within the turn's container.
