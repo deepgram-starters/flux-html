@@ -39,7 +39,7 @@ Browse all available starters at [github.com/deepgram-starters](https://github.c
 Vite builds and development use Node.js `^20.19.0 || >=22.12.0`. Tests intentionally use Bun `>=1.4.2` and are not run by Node alone.
 
 ```sh
-corepack enable
+npm install --global corepack@0.31.0 && corepack enable
 pnpm install --frozen-lockfile
 pnpm test
 pnpm build
