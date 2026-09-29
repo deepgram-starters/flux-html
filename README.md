@@ -34,6 +34,17 @@ To use this frontend with a complete working application, see:
 
 Browse all available starters at [github.com/deepgram-starters](https://github.com/deepgram-starters)
 
+## Development
+
+Vite builds and development use Node.js `^20.19.0 || >=22.12.0`. Tests intentionally use Bun `>=1.4.2` and are not run by Node alone.
+
+```sh
+npm install --global corepack@0.31.0 && corepack enable
+pnpm install --frozen-lockfile
+pnpm test
+pnpm build
+```
+
 ## About
 
 This frontend is automatically integrated as a submodule in the backend starters listed above. Running this repository standalone will not work as it requires backend WebSocket endpoints to function properly.

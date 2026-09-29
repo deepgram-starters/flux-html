@@ -5,6 +5,7 @@
   "description": "Pure HTML/CSS/JS frontend for Deepgram Flux (v2 Listen)",
   "main": "index.html",
   "type": "module",
+  "packageManager": "pnpm@9.15.5",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -28,7 +29,8 @@
     "url": "https://github.com/deepgram-starters/flux-html.git"
   },
   "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+    "node": "^20.19.0 || >=22.12.0",
+    "bun": ">=1.4.2"
   },
   "browserslist": [
     "defaults",
@@ -39,6 +41,6 @@
     "@deepgram/styles": "0.2.15"
   },
   "devDependencies": {
-    "vite": "7.3.5"
+    "vite": "8.3.1"
   }
 }
